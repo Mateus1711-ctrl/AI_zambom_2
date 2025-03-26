@@ -20,7 +20,8 @@ jobs:
           cache: maven
 
       - name: Build with Maven
-        run: mvn -B package --file pom.xml
+        run: mvn -B clean install
+        working-directory: ./AI_zambao
 
       - name: Login no Docker Hub
         uses: docker/login-action@v3
@@ -34,10 +35,10 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
-          context: .
-          file: ./Dockerfile
+          context: ./AI_zambao
+          file: ./AI_zambao/Dockerfile
           push: true
-          tags: mateus1711/deploy_AI-ci:${{ github.sha }}
+          tags: mateus1711/deploy_ai-ci:${{ github.sha }}
 
       - name: Deploy via SSH na AWS
         uses: appleboy/ssh-action@v0.1.10
@@ -52,4 +53,4 @@ jobs:
               -p 8080:8080 \
               --name deploy_AI \
               --network=rede-entidade \
-              mateus1711/deploy_AI-ci:${{ github.sha }}
+              mateus1711/deploy_ai-ci:${{ github.sha }}
