@@ -1,0 +1,6 @@
+br\insper\app\entidade\CountEntidadeDTO.class
+br\insper\app\Application.class
+br\insper\app\entidade\EntidadeService.class
+br\insper\app\entidade\EntidadeRepository.class
+br\insper\app\entidade\Entidade.class
+br\insper\app\entidade\EntidadeController.class
