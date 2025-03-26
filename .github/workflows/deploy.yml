@@ -55,4 +55,4 @@ jobs:
           port: 22
           script: |
             docker rm -f deploy_AI || true
-            docker run -d -p 8080:8080 --name deploy_AI --network=rede-entidade mateus1711/deploy_ai-ci:${{ github.sha }}
+            docker run -d -p 18.230.226.30:8080 --name deploy_AI --network=rede-entidade mateus1711/deploy_ai-ci:${{ github.sha }}
