@@ -54,3 +54,4 @@ jobs:
               --name deploy_AI \
               --network=rede-entidade \
               mateus1711/deploy_ai-ci:${{ github.sha }}
+              
