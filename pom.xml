@@ -59,7 +59,7 @@
                 <version>0.8.12</version>
                 <executions>
                     <execution>
-                        <id>pre-test</id>
+                        <id>prepare-test</id>
                         <goals>
                             <goal>prepare-agent</goal>
                         </goals>
