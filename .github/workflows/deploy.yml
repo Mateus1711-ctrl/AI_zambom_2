@@ -9,9 +9,11 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # 1) Baixar código do repositório
       - name: Checkout do código
         uses: actions/checkout@v4
 
+      # 2) Instalar Java 21
       - name: Set up JDK 21
         uses: actions/setup-java@v4
         with:
@@ -19,19 +21,23 @@ jobs:
           distribution: 'temurin'
           cache: maven
 
+      # 3) Build do projeto com Maven, dentro da pasta AI_zambao
       - name: Build with Maven
         run: mvn -B clean install
-       
+        working-directory: ./AI_zambao
 
+      # 4) Login no Docker Hub (precisa do secret DOCKERHUB_TOKEN)
       - name: Login no Docker Hub
         uses: docker/login-action@v3
         with:
-          username: "mateus1711"
+          username: "mateus1711"  # seu usuário Docker Hub
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
+      # 5) Set up Docker Buildx (para builder multiplataforma)
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
 
+      # 6) Build + Push da imagem Docker, usando a pasta AI_zambao como contexto
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
@@ -40,18 +46,21 @@ jobs:
           push: true
           tags: mateus1711/deploy_ai-ci:${{ github.sha }}
 
+      # 7) Deploy via SSH na AWS
       - name: Deploy via SSH na AWS
         uses: appleboy/ssh-action@v0.1.10
         with:
-          host: ${{ secrets.HOST_TEST }}
-          username: "ubuntu"
-          key: ${{ secrets.KEY_TEST }}
+          host: ${{ secrets.HOST_TEST }}       # IP da VM
+          username: "ubuntu"                   # usuário SSH
+          key: ${{ secrets.KEY_TEST }}         # chave privada .pem
           port: 22
           script: |
+            # Remove container anterior, se existir
             docker rm -f deploy_AI || true
+
+            # Sobe o novo container
             docker run -d \
               -p 8080:8080 \
               --name deploy_AI \
               --network=rede-entidade \
               mateus1711/deploy_ai-ci:${{ github.sha }}
-              
